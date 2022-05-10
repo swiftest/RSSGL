@@ -8,4 +8,4 @@ Steps:
 
 
 # Description
-- ![Diagram of RSSGL](Descriptions/RSSGL.pdf)
+
