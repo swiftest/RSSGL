@@ -11,3 +11,5 @@ Steps:
 
 ![](figure/fig1.png)
 
+Fig1. Overall architecture of the proposed RSSGL. Given a full hyperspectral dataset of size ${H \times W \times B}$, where $B$ indicates the number of spectral bands, the unified standardized input feature map is passed through 3D ConvLSTM to learn the short-range and long-range cross-channel dependencies and global spatial context features. Then, abundant spectral-spatial features are extracted through GJAM and group normalization (GN) is used to correct the inaccurate batch statistics estimation. Finally, the softmax layer is used for classification, and cross-entropy combined with statistical loss are used for error backward propagation.
+
