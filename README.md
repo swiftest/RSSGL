@@ -7,4 +7,4 @@ Steps:
 3. Run 'bash ./scripts/....sh' to reproduce the experiments presented in the Paper.
 
 
-- ![1.jpg](Descriptions/fig1.pdf)
+- ![fig1.pdf](Descriptions/fig1.pdf)
