@@ -4,13 +4,13 @@ RSSGL: Statistical Loss Regularized 3D ConvLSTM for Hyperspectral Image Classifi
 Code download link: [RSSGL code](https://github.com/swiftest/RSSGL).
 
 Here is the bibliography info:
-> @article{wang2022rssgl,
-  title={RSSGL: Statistical Loss Regularized 3D ConvLSTM for Hyperspectral Image Classification},
-  author={Wang, Liguo and Wang, Heng and Wang, Lifeng and Wang, Xiaoyi and Shi, Yao and Cui, Ying},
-  journal={IEEE Transactions on Geoscience and Remote Sensing},
-  year={2022},
-  DOI (identifier)={10.1109/TGRS.2022.3174305},
-  publisher={IEEE}
+> @article{wang2022RSSGL,\
+&emsp; title={RSSGL: Statistical Loss Regularized 3D ConvLSTM for Hyperspectral Image Classification},\
+&emsp; author={Wang, Liguo and Wang, Heng and Wang, Lifeng and Wang, Xiaoyi and Shi, Yao and Cui, Ying},\
+&emsp; journal={IEEE Transactions on Geoscience and Remote Sensing},\
+&emsp; year={2022},\
+&emsp; DOI (identifier)={10.1109/TGRS.2022.3174305},\
+&emsp; publisher={IEEE}
 }
 
 
