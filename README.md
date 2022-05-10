@@ -8,4 +8,4 @@ Steps:
 
 
 # Descriptions
-- ![](Descriptions/fig1.pdf)
+![](Descriptions/RSSGL.pdf)
