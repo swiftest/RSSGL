@@ -9,4 +9,4 @@ Steps:
 
 # Description
 
-[]()
+![](figure/fig1.png)
