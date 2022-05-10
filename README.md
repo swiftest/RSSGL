@@ -9,4 +9,5 @@ Steps:
 
 # Description
 
-![](figure/RSSGL.pdf)
+![](figure/fig1.png)
+
