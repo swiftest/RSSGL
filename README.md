@@ -7,5 +7,5 @@ Steps:
 3. Run 'bash ./scripts/....sh' to reproduce the experiments presented in the Paper.
 
 
-# Descriptions
-![](Descriptions/RSSGL.pdf)
+# Description
+- ![Diagram of RSSGL](Descriptions/RSSGL.pdf)
