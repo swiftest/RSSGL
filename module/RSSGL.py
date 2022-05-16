@@ -523,32 +523,24 @@ class Bi_ConvLSTM(nn.Module):
                     else:
                         x_reverse = input[:, -(step + 1) * b: -step * b]
                     x_reverse = x_reverse.unsqueeze(dim=1)  # (1, 1, 12, 624, 352), (1, 1, 16, 312, 176)...
-            
                     x = input[:, step * b:(step + 1) * b, :, :]  # (1, 12, 624, 352), (1, 16, 312, 176)...
                     x = x.unsqueeze(dim=1)  # (1, 1, 12, 624, 352), (1, 1, 16, 312, 176)...
-            
                     bsize, _, dimension, height, width = x.size()
-                
                     if step == 0:
                         (h, c) = getattr(self, name).init_hidden(batch_size=bsize, hidden=self.hidden_channels[i], 
                                                                  shape=(dimension, height, width))
                         internal_state.append((h, c))
-                    
                         (h_reverse, c_reverse) = getattr(self, name_reverse).init_hidden(batch_size=bsize, 
                                                                                          hidden=self.hidden_channels[i], 
                                                                                          shape=(dimension, height, width))
                         internal_state_reverse.append((h_reverse, c_reverse))
-                    
                     # do forward
                     (h, c) = internal_state[i]
                     (h_reverse, c_reverse) = internal_state_reverse[i]
-                
                     x, new_c = getattr(self, name)(x, h, c)
                     internal_state[i] = (x, new_c)
-                
                     x_reverse, new_c_reverse = getattr(self, name_reverse)(x_reverse, h_reverse, c_reverse)
                     internal_state_reverse[i] = (x_reverse, new_c_reverse)
-                
                     outputs.append(x)
                     outputs_reverse.insert(0, x_reverse)
                 if self.num_layers == 1:
@@ -567,11 +559,8 @@ class Bi_ConvLSTM(nn.Module):
                         x_reverse = input[:, -(step + 1) * b:]
                     else:
                         x_reverse = input[:, -(step + 1) * b: -step * b]
-            
                     x = input[:, step * b:(step + 1) * b]  # (1, 8, 12, 624, 352), (1, 8, 16, 312, 176)...
-                
                     bsize, _, dimension, height, width = x.size()
-                
                     if step == 0:
                         (h, c) = getattr(self, name).init_hidden(batch_size=bsize, hidden=self.hidden_channels[i], 
                                                                  shape=(dimension, height, width))
@@ -581,17 +570,13 @@ class Bi_ConvLSTM(nn.Module):
                                                                                          hidden=self.hidden_channels[i], 
                                                                                          shape=(dimension, height, width))
                         internal_state_reverse.append((h_reverse, c_reverse))
-                    
                     # do forward
                     (h, c) = internal_state[i]
                     (h_reverse, c_reverse) = internal_state_reverse[i]
-                
                     x, new_c = getattr(self, name)(x, h, c)
                     internal_state[i] = (x, new_c)
-                
                     x_reverse, new_c_reverse = getattr(self, name_reverse)(x_reverse, h_reverse, c_reverse)
                     internal_state_reverse[i] = (x_reverse, new_c_reverse)
-                
                     outputs.append(x)
                     outputs_reverse.insert(0, x_reverse)
                 if i == self.num_layers - 1:
