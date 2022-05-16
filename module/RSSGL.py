@@ -437,7 +437,6 @@ class ConvLSTMCell(nn.Module):
         self.input_channels = input_channels
         self.hidden_channels = hidden_channels
         self.kernel_size = kernel_size
-        self.num_features = 4
         self.padding = tuple((int((i-1)/2) for i in kernel_size))
 
         self.Wxi = nn.Conv3d(self.input_channels, self.hidden_channels, self.kernel_size, 1, self.padding, bias=True)
