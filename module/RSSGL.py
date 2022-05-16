@@ -146,11 +146,9 @@ class RSSGL(CVModule):
 
             out_feat_list.append(out)
         final_feat = out_feat_list[-1]  # (batch_size, 103, 624, 352) This is the final feature space!!!
-        
         #mat_path = './feature.mat'
         #mat = final_feat.cpu().detach().numpy()
         #io.savemat(mat_path, {'name': mat})
-        
         logit = self.cls_pred_conv(final_feat)  # (batch_size, 9, 624, 352)
         if self.training:
             loss_dict = {'cls_loss': self.loss(logit, y, train_inds, final_feat)}
@@ -168,7 +166,6 @@ class RSSGL(CVModule):
             cls_num_list = [5, 72, 42, 12, 25, 37, 5, 24, 5, 49, 123, 30, 11, 64, 20, 5]
         else:
             print("no cls_num_list")
-        
         effective_num = 1.0 - np.power(beta, cls_num_list)
         per_cls_weights = (1.0 - beta) / np.array(effective_num)
         per_cls_weights = per_cls_weights / np.sum(per_cls_weights) * len(cls_num_list)
@@ -330,21 +327,6 @@ class RSSGL(CVModule):
         variance_loss = variance_loss / num_cls
         
         diver_loss = torch.tensor(0.).cuda()
-        #for k in range(1, num_cls+1):
-        #    Sk = torch.zeros(feat_dimension, feat_dimension).cuda()
-        #    zj_ck = feat_dict_per_class[k] - ck[k]
-        #    nk = zj_ck.size()[1]
-        #    for i in range(nk):
-        #        Sk += torch.mm(zj_ck[:, i].unsqueeze(dim=1), zj_ck[:, i].unsqueeze(dim=0))
-        #    for t in range(k+1, num_cls+1):
-        #        St = torch.zeros(feat_dimension, feat_dimension).cuda()
-        #        zj_ct = feat_dict_per_class[t] - ck[t]
-        #        nt = zj_ct.size()[1]
-        #        for j in range(nt):
-        #            St += torch.mm(zj_ct[:, j].unsqueeze(dim=1), zj_ct[:, j].unsqueeze(dim=0))
-        #        ck_ct = ck[k] - ck[t]
-        #        diver_loss += delta - torch.mm(torch.mm(ck_ct.transpose(1, 0), torch.inverse(Sk + St)), 
-        #                                       ck_ct).squeeze() * (nk*nt - 2*nk*nt / (nk+nt))
         for k in range(1, num_cls+1):
             for t in range(k+1, num_cls+1):
                 diver_loss -= torch.dist(ck[k], ck[t], p=2)
@@ -353,7 +335,6 @@ class RSSGL(CVModule):
         return variance_loss + diver_loss
         
     def set_defalut_config(self):
-        # pavia
         self.config.update(dict(
             in_channels=103,
             num_classes=9,
@@ -368,13 +349,10 @@ class ChannelAttention(nn.Module):
     def __init__(self, in_planes, ratio=16):
         super(ChannelAttention, self).__init__()
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-
         self.max_pool = nn.AdaptiveMaxPool2d(1)
-
         self.fc1 = nn.Conv2d(in_planes, in_planes // ratio, 1, bias=False)
         self.relu1 = nn.ReLU(inplace=True)
         self.fc2 = nn.Conv2d(in_planes // ratio, in_planes, 1, bias=False)
-
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
@@ -382,9 +360,7 @@ class ChannelAttention(nn.Module):
         avg_out = self.fc2(self.relu1(self.fc1(self.avg_pool(x))))
         max_out = self.fc2(self.relu1(self.fc1(self.max_pool(x))))
         out = self.sigmoid(avg_out + max_out)
-
         y = x * out.view(out.size(0), out.size(1), 1, 1)
-
         y = y + residual
         return y
 
@@ -392,10 +368,8 @@ class ChannelAttention(nn.Module):
 class SpatialAttention(nn.Module):
     def __init__(self, kernel_size=7):
         super(SpatialAttention, self).__init__()
-
         assert kernel_size in (3, 7), 'kernel size must be 3 or 7'
         padding = 3 if kernel_size == 7 else 1
-
         self.conv1 = nn.Conv2d(2, 1, kernel_size, padding=padding, bias=False)
         self.relu1 = nn.ReLU(inplace=True)
         self.sigmoid = nn.Sigmoid()
@@ -403,25 +377,19 @@ class SpatialAttention(nn.Module):
     def forward(self, x):
         residual = x
         avg_out = torch.mean(x, dim=1, keepdim=True)
-
         max_out, _ = torch.max(x, dim=1, keepdim=True)
-
         out = torch.cat([avg_out, max_out], dim=1)
         out1 = self.conv1(out)
         out2 = self.relu1(out1)
         out = self.sigmoid(out2)
-
         y = x * out.view(out.size(0), 1, out.size(-2), out.size(-1))
         y = y + residual
         return y
 
 
 class BasicBlock(nn.Module):
-    expansion = 1
-
     def __init__(self, planes):
         super(BasicBlock, self).__init__()
-
         self.ca = ChannelAttention(planes)
         self.sa = SpatialAttention()
         self.relu = nn.ReLU(inplace=True)
