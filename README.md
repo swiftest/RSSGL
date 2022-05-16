@@ -1,5 +1,5 @@
 # RSSGL
-RSSGL: Statistical Loss Regularized 3D ConvLSTM for Hyperspectral Image Classification
+RSSGL: Statistical Loss Regularized 3-D ConvLSTM for Hyperspectral Image Classification
 
 Code download link: [RSSGL code](https://github.com/swiftest/RSSGL).
 
@@ -8,7 +8,7 @@ Here is the bibliography info:
 
 ```jason
 @article{wang2022RSSGL,  
-  title={RSSGL: Statistical Loss Regularized 3D ConvLSTM for Hyperspectral Image Classification},  
+  title={RSSGL: Statistical Loss Regularized 3-D ConvLSTM for Hyperspectral Image Classification},  
   author={Wang, Liguo and Wang, Heng and Wang, Lifeng and Wang, Xiaoyi and Shi, Yao and Cui, Ying},  
   journal={IEEE Transactions on Geoscience and Remote Sensing},  
   year={2022},  
@@ -39,7 +39,7 @@ Fig2. The architecture of the 3D ConvLSTM.
 
 Fig3. The architecture of the 3D ConvLSTMCell.  
 
-Compared with SSDGL, the proposed framework mainly makes three improvements. Above all, aiming at the problem that the GCL module used in SSDGL cannot fully tap the local spectral dependence, we apply 3D convolution to the gated units of long short-term memory (LSTM) as an alternative to the GCL module for adjacent and non-adjacent spectral dependencies learning. Furthermore, to extract the most discriminative features, an improved statistical loss regularization term is developed, in which we introduce a simple but effective diversity-promoting condition to make it more reasonable and suitable for deep metric learning in HSI classification. Finally, to effectively address the performance oscillation caused by the H-B sampling strategy, the proposed framework adopts an early stopping strategy to save and restore the optimal model parameters, making it more flexible and stable.
+Compared with SSDGL, the proposed framework mainly makes three improvements. Above all, aiming at the problem that the GCL module used in SSDGL cannot fully tap the local spectral dependence, we apply 3-D convolution to the gated units of long short-term memory (LSTM) as an alternative to the GCL module for adjacent and non-adjacent spectral dependencies learning. Furthermore, to extract the most discriminative features, an improved statistical loss regularization term is developed, in which we introduce a simple but effective diversity-promoting condition to make it more reasonable and suitable for deep metric learning in HSI classification. Finally, to effectively address the performance oscillation caused by the H-B sampling strategy, the proposed framework adopts an early stopping strategy to save and restore the optimal model parameters, making it more flexible and stable.
 
 ## Results  
 
@@ -53,10 +53,10 @@ Fig.4  The IP data set classification result (OA: 96.73±0.095(%); AA: 97.60±0.
 
 Fig.5  The SA data set classification result (OA: 99.81±0.040(%); AA: 99.79±0.053(%); Kappa: 0.9980±0.000) of RSSGL using fixed 1% samples for training (SEED=2333).
 
-### University of Pavia (UP) Data Set 
+### University of Pavia (PU) Data Set 
 <img src="figure/UP_RSSGL.png" height="407"/> 
 
-Fig.6  The UP data set classification result (OA: 99.47±0.080(%); AA: 99.12±0.252(%); Kappa: 0.9930±0.001) of RSSGL using fixed 1% samples for training (SEED=2333).
+Fig.6  The PU data set classification result (OA: 99.47±0.080(%); AA: 99.12±0.252(%); Kappa: 0.9930±0.001) of RSSGL using fixed 1% samples for training (SEED=2333).
 
 ## Acknowledgement
 
