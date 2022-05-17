@@ -460,8 +460,8 @@ class Si_ConvLSTM(nn.Module):
     def forward(self, input):
         internal_state = []
         outputs = []
-        a = input.squeeze()
-        b = int(len(a) / 8)
+        a = input.size(1)
+        b = int(a / 8)
         for step in range(self.step):
             x = input[:, step * b:(step + 1) * b, :, :]  # (1, 12, 624, 352), (1, 16, 312, 176)...
             x = x.unsqueeze(dim=1)  # (1, 1, 12, 624, 352), (1, 1, 16, 312, 176)...
