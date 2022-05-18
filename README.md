@@ -33,11 +33,11 @@ Fig1. Overall architecture of the proposed RSSGL. Given a full hyperspectral dat
 
 <img src="figure/fig2.png" height="400"/>
 
-Fig2. The architecture of the 3D ConvLSTM.  
+Fig2. The architecture of the 3-D ConvLSTM.  
 
 <img src="figure/fig3.png" height="417"/>
 
-Fig3. The architecture of the 3D ConvLSTMCell.  
+Fig3. The architecture of the 3-D ConvLSTMCell.  
 
 Compared with SSDGL, the proposed framework mainly makes three improvements. Above all, aiming at the problem that the GCL module used in SSDGL cannot fully tap the local spectral dependence, we apply 3-D convolution to the gated units of long short-term memory (LSTM) as an alternative to the GCL module for adjacent and non-adjacent spectral dependencies learning. Furthermore, to extract the most discriminative features, an improved statistical loss regularization term is developed, in which we introduce a simple but effective diversity-promoting condition to make it more reasonable and suitable for deep metric learning in HSI classification. Finally, to effectively address the performance oscillation caused by the H-B sampling strategy, the proposed framework adopts an early stopping strategy to save and restore the optimal model parameters, making it more flexible and stable.
 
