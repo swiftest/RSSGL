@@ -35,7 +35,7 @@ Fig1. Overall architecture of the proposed RSSGL. Given a full hyperspectral dat
 
 Fig2. The architecture of the 3D ConvLSTM.  
 
-<img src="figure/fig3.png" height="407"/>
+<img src="figure/fig3.png" height="417"/>
 
 Fig3. The architecture of the 3D ConvLSTMCell.  
 
