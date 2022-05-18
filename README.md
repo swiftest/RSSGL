@@ -1,7 +1,7 @@
 # RSSGL
 RSSGL: Statistical Loss Regularized 3-D ConvLSTM for Hyperspectral Image Classification
 
-Code download link: [RSSGL code](https://github.com/swiftest/RSSGL).
+Code download link: [RSSGL code](https://github.com/swiftest/RSSGL/archive/refs/heads/main.zip).
 
 Here is the bibliography info:
 <br/>
