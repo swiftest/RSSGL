@@ -483,7 +483,7 @@ class Si_ConvLSTM(nn.Module):
         result = x[:, 0]
         for i in range(self.hidden_channels[-1] - 1):
             result = torch.cat([result, x[:, i + 1]], dim=1)
-        return result  # (batch_size, self.hidden_channels[-1] * 8, height, width)
+        return result
     
 
 class Bi_ConvLSTM(nn.Module):
