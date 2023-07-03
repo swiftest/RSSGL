@@ -271,7 +271,7 @@ class RSSGL(CVModule):
             centers = torch.cat([centers, ck[i+1]], dim=1)
             
         radius = torch.norm(centers, p=2, dim=0).mean()
-        centers_trans = centers / torch.torch.norm(centers, p=2, dim=0) * radius
+        centers_trans = centers / torch.norm(centers, p=2, dim=0) * radius
         
         result = torch.zeros(num_train).cuda()
         for i in range(num_train):
