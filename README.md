@@ -11,7 +11,9 @@ Here is the bibliography info:
   title={RSSGL: Statistical Loss Regularized 3-D ConvLSTM for Hyperspectral Image Classification},  
   author={Wang, Liguo and Wang, Heng and Wang, Lifeng and Wang, Xiaoyi and Shi, Yao and Cui, Ying},  
   journal={IEEE Transactions on Geoscience and Remote Sensing},  
-  year={2022},  
+  year={2022},
+  volume={60},
+  pages={1-20},
   DOI (identifier)={10.1109/TGRS.2022.3174305},  
   publisher={IEEE}  
 }
