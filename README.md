@@ -7,7 +7,7 @@ Here is the bibliography info:
 <br/>
 
 ```jason
-@article{wang2022RSSGL,  
+@article{Wang2022RSSGL,  
   title={RSSGL: Statistical Loss Regularized 3-D ConvLSTM for Hyperspectral Image Classification},  
   author={Wang, Liguo and Wang, Heng and Wang, Lifeng and Wang, Xiaoyi and Shi, Yao and Cui, Ying},  
   journal={IEEE Transactions on Geoscience and Remote Sensing},  
