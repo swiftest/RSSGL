@@ -18,9 +18,9 @@ Here is the bibliography info:
 ```
 
 ## Steps:
-- 1. Run 'bash setup_script.sh' to download the data sets. Then, put the data sets and the ground truth into the corresponding folders.
-- 2. Unizp the 'simplecv.zip' into your PYTHONPATH, or move the unzipped module to the 'site-packages' path.
-- 3. Run 'bash ./scripts/....sh' to reproduce the experiments presented in the Paper.
+- Run 'bash setup_script.sh' to download the data sets. Then, put the data sets and the ground truth into the corresponding folders.
+- Unizp the 'simplecv.zip' into your PYTHONPATH, or move the unzipped module to the 'site-packages' path.
+- Run 'bash ./scripts/....sh' to reproduce the experiments presented in the Paper.
 
 
 ## Descriptions
