@@ -100,17 +100,16 @@ def fcn_evaluate_fn(self, test_dataloader, config):
     self._logger.eval_log(metric_dict=metric_dict, step=self.checkpoint.global_step)
     
     config['test_oa'].append(oa.item())
-    if config['early_stopping'] and config['test_oa'][-2] > config['test_oa'][-1]:
-        if config['early_epoch'] == 0:
-            torch.save(self._model.state_dict(), config['PATH'])
+    if config['test_oa'][-1] > config['test_oa'][-2]:
+        torch.save(self._model.state_dict(), config['PATH'])
+        config['early_epoch'] = 0
+    else:
         config['early_epoch'] += 1
         config['test_oa'][-1] = config['test_oa'][-2]
         if config['early_epoch'] == config['early_num']:
             self._model.load_state_dict(torch.load(config['PATH']))
             print('Early stopping, the most optimal test_oa is:', config['test_oa'][-1])
             raise StopIteration('Early Stop!')
-    else:
-        config['early_epoch'] = 0
 
 
 def register_evaluate_fn(launcher):
