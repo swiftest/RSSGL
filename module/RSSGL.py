@@ -59,8 +59,7 @@ def repeat_block(block_channel1, r, n):
     gn_a = int(block_channel1 / 2)
     layers = (
         nn.Sequential(
-            Si_ConvLSTM(input_channels=1, hidden_channels=[4, 4], kernel_size=kernel_shape, step=8,
-                        effective_step=7).cuda(),
+            ConvLSTM(input_channels=1, hidden_channels=[4, 4], kernel_size=kernel_shape, step=8, effective_step=7).cuda(),
             BasicBlock(gn_a), 
             gn_relu(block_channel1, r)
         )
@@ -441,9 +440,9 @@ class ConvLSTMCell(nn.Module):
                 Variable(torch.zeros(batch_size, hidden, shape[0], shape[1], shape[2])).cuda())
 
     
-class Si_ConvLSTM(nn.Module):
+class ConvLSTM(nn.Module):
     def __init__(self, input_channels, hidden_channels, kernel_size, step=8, effective_step=7):
-        super(Si_ConvLSTM, self).__init__()
+        super(ConvLSTM, self).__init__()
         self.input_channels = [input_channels] + hidden_channels
         self.hidden_channels = hidden_channels
         self.kernel_size = kernel_size
@@ -484,104 +483,3 @@ class Si_ConvLSTM(nn.Module):
         for i in range(self.hidden_channels[-1] - 1):
             result = torch.cat([result, x[:, i + 1]], dim=1)
         return result
-    
-
-class Bi_ConvLSTM(nn.Module):
-    def __init__(self, input_channels, hidden_channels, kernel_size, step=8, effective_step=7):
-        super(Bi_ConvLSTM, self).__init__()
-        self.input_channels = [input_channels] + hidden_channels
-        self.hidden_channels = hidden_channels
-        self.kernel_size = kernel_size
-        self.num_layers = len(hidden_channels)
-        self.step = step
-        self.effective_step = effective_step
-        self._all_layers = []
-        for i in range(self.num_layers):
-            name = 'cell{}'.format(i)
-            name_reverse = 'cell_reverse{}'.format(i)
-            cell = ConvLSTMCell(self.input_channels[i], self.hidden_channels[i], self.kernel_size)
-            cell_reverse = ConvLSTMCell(self.input_channels[i], self.hidden_channels[i], self.kernel_size)
-            setattr(self, name, cell)
-            setattr(self, name_reverse, cell_reverse)
-            self._all_layers.append(cell)
-            self._all_layers.append(cell_reverse)
-
-    def forward(self, input):
-        internal_state = []
-        internal_state_reverse = []
-        outputs = []
-        outputs_reverse = []
-        a = input.squeeze()
-        b = int(len(a) / 8)
-        for i in range(self.num_layers):
-            name = "cell{}".format(i)
-            name_reverse = "cell_reverse{}".format(i)
-            if i == 0:
-                for step in range(self.step):
-                    if step == 0:
-                        x_reverse = input[:, -(step + 1) * b:]
-                    else:
-                        x_reverse = input[:, -(step + 1) * b: -step * b]
-                    x_reverse = x_reverse.unsqueeze(dim=1)  # (1, 1, 12, 624, 352), (1, 1, 16, 312, 176)...
-                    x = input[:, step * b:(step + 1) * b, :, :]  # (1, 12, 624, 352), (1, 16, 312, 176)...
-                    x = x.unsqueeze(dim=1)  # (1, 1, 12, 624, 352), (1, 1, 16, 312, 176)...
-                    bsize, _, dimension, height, width = x.size()
-                    if step == 0:
-                        (h, c) = getattr(self, name).init_hidden(batch_size=bsize, hidden=self.hidden_channels[i], 
-                                                                 shape=(dimension, height, width))
-                        internal_state.append((h, c))
-                        (h_reverse, c_reverse) = getattr(self, name_reverse).init_hidden(batch_size=bsize, 
-                                                                                         hidden=self.hidden_channels[i], 
-                                                                                         shape=(dimension, height, width))
-                        internal_state_reverse.append((h_reverse, c_reverse))
-                    # do forward
-                    (h, c) = internal_state[i]
-                    (h_reverse, c_reverse) = internal_state_reverse[i]
-                    x, new_c = getattr(self, name)(x, h, c)
-                    internal_state[i] = (x, new_c)
-                    x_reverse, new_c_reverse = getattr(self, name_reverse)(x_reverse, h_reverse, c_reverse)
-                    internal_state_reverse[i] = (x_reverse, new_c_reverse)
-                    outputs.append(x)
-                    outputs_reverse.insert(0, x_reverse)
-                if self.num_layers == 1:
-                    last_step_output = outputs[-1] + outputs_reverse[-1]
-                    result = last_step_output[:, 0]
-                    for j in range(self.hidden_channels[i] - 1):
-                        result = torch.cat([result, last_step_output[:, j + 1]], dim=1)
-                    return result
-            else:
-                input = torch.cat([outputs[j] + outputs_reverse[j] for j in range(self.step)], dim=1)
-                b = self.hidden_channels[i - 1]
-                outputs = []
-                outputs_reverse = []
-                for step in range(self.step):
-                    if step == 0:
-                        x_reverse = input[:, -(step + 1) * b:]
-                    else:
-                        x_reverse = input[:, -(step + 1) * b: -step * b]
-                    x = input[:, step * b:(step + 1) * b]  # (1, 8, 12, 624, 352), (1, 8, 16, 312, 176)...
-                    bsize, _, dimension, height, width = x.size()
-                    if step == 0:
-                        (h, c) = getattr(self, name).init_hidden(batch_size=bsize, hidden=self.hidden_channels[i], 
-                                                                 shape=(dimension, height, width))
-                        internal_state.append((h, c))
-                    
-                        (h_reverse, c_reverse) = getattr(self, name_reverse).init_hidden(batch_size=bsize, 
-                                                                                         hidden=self.hidden_channels[i], 
-                                                                                         shape=(dimension, height, width))
-                        internal_state_reverse.append((h_reverse, c_reverse))
-                    # do forward
-                    (h, c) = internal_state[i]
-                    (h_reverse, c_reverse) = internal_state_reverse[i]
-                    x, new_c = getattr(self, name)(x, h, c)
-                    internal_state[i] = (x, new_c)
-                    x_reverse, new_c_reverse = getattr(self, name_reverse)(x_reverse, h_reverse, c_reverse)
-                    internal_state_reverse[i] = (x_reverse, new_c_reverse)
-                    outputs.append(x)
-                    outputs_reverse.insert(0, x_reverse)
-                if i == self.num_layers - 1:
-                    last_step_output = outputs[-1] + outputs_reverse[-1]
-                    result = last_step_output[:, 0]
-                    for j in range(self.hidden_channels[i] - 1):
-                        result = torch.cat([result, last_step_output[:, j + 1]], dim=1)
-                    return result
