@@ -115,9 +115,11 @@ def fcn_evaluate_fn(self, test_dataloader, config):
     
     config['test_oa'].append(oa.item())
     if config['test_oa'][-1] > config['test_oa'][-2]:
+        print("test_oa improved from {:.4f} to {:.4f}, saving model ...".format(config['test_oa'][-2], config['test_oa'][-1]))
         torch.save(self._model.state_dict(), config['PATH'])
         config['early_epoch'] = 0
     else:
+        print("test_oa did not improve from {:.4f}".format(config['test_oa'][-2]))
         config['early_epoch'] += 1
         config['test_oa'][-1] = config['test_oa'][-2]
         if config['early_epoch'] == config['early_num']:
