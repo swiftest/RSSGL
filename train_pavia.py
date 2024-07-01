@@ -136,6 +136,7 @@ if __name__ == '__main__':
         pass
     else:
         model = return_dict['launcher']._model
+        model.load_state_dict(torch.load(config['PATH']))
     model.eval()
     
     im_mat = loadmat('./pavia/PaviaU.mat')
