@@ -21,7 +21,7 @@ class FullImageDataset(dataset.Dataset):
         self.preset()
 
     def preset(self):
-        train_indicator, test_indicator= fixed_num_sample(self.mask, self.sample_percent, self.num_classes)
+        train_indicator, test_indicator= fixed_num_sample(self.mask, self.sample_percent, self.num_classes, seed=2333)
 
         blob = divisible_pad([np.concatenate([self.image.transpose(2, 0, 1),
                                               self.mask[None, :, :],
@@ -73,7 +73,7 @@ class MinibatchSampler(data.Sampler):
         return len(self.dataset)
 
 
-def fixed_num_sample(gt_mask: np.ndarray, sample_percent, num_classes):
+def fixed_num_sample(gt_mask: np.ndarray, sample_percent, num_classes, seed=2333):
     """
     Args:
         gt_mask: 2-D array of shape [height, width]
@@ -82,6 +82,7 @@ def fixed_num_sample(gt_mask: np.ndarray, sample_percent, num_classes):
     Returns:
         train_indicator, test_indicator
     """
+    rs = np.random.RandomState(seed)
     #(106，610，340)
     gt_mask_flatten = gt_mask.ravel()
     train_indicator = np.zeros_like(gt_mask_flatten)
@@ -94,7 +95,8 @@ def fixed_num_sample(gt_mask: np.ndarray, sample_percent, num_classes):
         num_train_samples = num_train_samples.astype(np.int32)
         if num_train_samples <5:
             num_train_samples=5  # At least 5 samples per class
-        np.random.shuffle(inds)
+        rs.shuffle(inds)
+        #np.random.shuffle(inds)
 
         train_inds = inds[:num_train_samples]
         test_inds = inds[num_train_samples:]
