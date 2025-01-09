@@ -27,7 +27,7 @@ elif config_path == "RSSGL.RSSGL_Salinas":
     loss_weight = 0.001
 elif config_path == "RSSGL.RSSGL_Indian_Pines":
     kernel_shape = (3, 3, 3)
-    loss_weight = 0.0009
+    loss_weight = 0.001
 
 
 def conv3x3_gn_relu(in_channel, out_channel, num_group):
@@ -297,7 +297,6 @@ class RSSGL(CVModule):
 
     def statistical_loss(self, y, train_inds, final_feat):  
         #y: (1, 624, 352), train_inds: (1, 624, 352), final_feat: (1, 103, 624, 352)
-        lamb = 1e-3
         y = y.squeeze()  # (624, 352)
         train_inds = train_inds.squeeze()  #(624, 352)
         final_feat = final_feat.squeeze()  # (103, 624, 352)
@@ -329,7 +328,7 @@ class RSSGL(CVModule):
         for k in range(1, num_cls+1):
             for t in range(k+1, num_cls+1):
                 diver_loss -= torch.dist(ck[k], ck[t], p=2)
-        diver_loss = diver_loss * lamb
+        diver_loss = 2 * diver_loss / (num_cls * (num_cls - 1))
         #print(variance_loss, diver_loss)
         return variance_loss + diver_loss
         
