@@ -296,8 +296,8 @@ class RSSGL(CVModule):
         return result.sum() / (2 * num_train)
 
     def statistical_loss(self, y, train_inds, final_feat):
-        lamb = 1e-3
         #y: (1, 624, 352), train_inds: (1, 624, 352), final_feat: (1, 103, 624, 352)
+        lamb = 1e-3
         y = y.squeeze()  # (624, 352)
         train_inds = train_inds.squeeze()  #(624, 352)
         final_feat = final_feat.squeeze()  # (103, 624, 352)
