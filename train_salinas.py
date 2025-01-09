@@ -123,7 +123,6 @@ def fcn_evaluate_fn(self, test_dataloader, config):
         config['early_epoch'] += 1
         config['test_oa'][-1] = config['test_oa'][-2]
         if config['early_epoch'] == config['early_num']:
-            self._model.load_state_dict(torch.load(config['PATH']))
             print('Early stopping, the most optimal test_oa is:', config['test_oa'][-1])
             raise StopIteration('Early Stop!')
 
